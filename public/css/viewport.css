@@ -1,0 +1,74 @@
+#viewportBar {
+	align-items: center;
+	background-color: #242424;
+	color: #c3c3c3;
+	display: flex;
+	flex-grow: 2;
+	height: 32px;
+	font-size: 14px;
+	justify-content: space-between;
+	left: 0;
+	margin: 0 auto;
+	right: 0;
+	top: 0;
+}
+.toolbarButtons {
+	position: relative;
+}
+ .toolbarButtons * {
+	margin-left: 0;
+	padding: 8px;
+	vertical-align: middle;
+}
+.toolbarButtons a.button {
+	margin: 0 6px 0 0;
+}
+.toolbarButtons a.button:not(.active):hover {
+	background-color: #444;
+}
+.toolbarButtons .active {
+	background-color: #1faaf2;
+	color: #fff;
+}
+ .toolbarButtons .active:hover {
+	color: #fff !important;
+}
+ .local-transform {
+	padding-left: 10px;
+}
+ .local-transform label {
+	color: #AAA;
+	padding-left: 5px;
+}
+.local-transform a.button {
+	padding-top: 0;
+}
+#cameraSelect {
+	cursor: pointer;
+	width: 110px;
+}
+#cameraSelect .select__dropdown-indicator {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+#cameraToolbar {
+	margin-left: 5px;
+	align-items: center;
+	display: flex;
+}
+#cameraToolbar a {
+	margin-right: 10px;
+}
+#cameraToolbar .select__control {
+	background: none;
+}
+#cameraToolbar .select__single-value {
+	color: #c3c3c3;
+}
+#cameraToolbar .select__single-value:hover {
+	color: #1faaf2;
+}
+#viewportHud {
+	display: none;
+}
+ 

@@ -1,0 +1,52 @@
+extends _bootstrap
+append styles
+    // Custom styles for this template
+    link(href='/css/navbar-static-top.css', rel='stylesheet')
+
+block body
+    script(type='text/javascript').
+        function readSingleFile(e) {
+                const name = e[0].name;
+                document.getElementById("file-label").textContent = name;
+        }
+    // Static navbar
+    +navbar-static("VR-CMS","navbar")
+        +nav_item("/","active") Home
+        +nav_item_dropdown("#")(label="Dropdown")
+            +nav_item("/admin/regions") Admin
+    .container
+        form(action = "/admin/regions/add_item", method = "POST", enctype='multipart/form-data')
+            .form-groupvid
+                label(for='vid') Region ID
+                input#vid.form-control(type='text', placeholder='Region ID', value=region_id, name='vrid', readonly='')
+            
+            label(for='scene') Scene Name: 
+            input#scene.form-control(type='text', placeholder='Scene Name', name='SceneName')
+            
+            label(for='file') Image File
+            input#file.form-control(type='file', placeholder='Image', name='file', on change="readSingleFile(this.files)")
+
+            label(for='left') Left Position
+            | 
+            img#left.image(src='/images/left.png', style='width:25px; height:25px;')
+            input#left.form-control(type='text', placeholder='Enter Scene Name to connect', name='leftPos')
+            
+            label(for='up') Up Position
+            | 
+            img#up.image(src='/images/up.png', style='width:25px; height:25px;')
+            input#up.form-control(type='text', placeholder='Enter Scene Name to connect', name='upPos')
+
+            label(for='right') Right Position
+            | 
+            img#up.image(src='/images/right.png', style='width:25px; height:25px;')
+            input#up.form-control(type='text', placeholder='Enter Scene Name to connect', name='rightPos')
+
+
+            label(for='down') Down Position
+            | 
+            img#up.image(src='/images/down.png', style='width:25px; height:25px;')
+            input#up.form-control(type='text', placeholder='Enter Scene Name to connect', name='downPos')
+            
+            +submit("Add")
+
+    

@@ -1,0 +1,152 @@
+doctype html
+html
+    head
+        title VR Web Viewer
+        meta(charset='utf-8')
+        meta(name='description', content='Virtual Tours')
+        script(src='https://aframe.io/releases/1.2.0/aframe.min.js')
+        script(src='https://rawgit.com/rdub80/aframe-gui/master/dist/aframe-gui.min.js')
+        script(src='/javascripts/LegacyJSONLoader.js')
+        script(src='/javascripts/aframe-tooltip-component.js')
+        script(src='/javascripts/camera-position.js')
+        script(src='/javascripts/link-controls.js')
+        script(src='/javascripts/contents-save.js')
+        script(src="/javascripts/scene/pressed-gui-button.js") 
+        script(src="/javascripts/scene/dropdown-event.js")
+        script(src="/javascripts/scene/rotate-event.js")
+        script(src="/javascripts/scene/object3DControl.js")
+        script(src="/javascripts/scene/toggle-mode.js")
+        //script(src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js")
+        
+        script(src="/javascripts/Inspector-custom/aframe-inspector-custom.js")
+        script(src='https://unpkg.com/aframe-event-set-component@^5.0.0/dist/aframe-event-set-component.min.js')
+        script(src='https://unpkg.com/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js')
+        script(src='https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js')
+        script(src='https://unpkg.com/super-hands@^3.0.3/dist/super-hands.min.js')
+        // inspector="url:https://cdn.jsdelivr.net/gh/aframevr/aframe-inspector@master/dist/aframe-inspector.min.js"
+
+    body
+        a-scene(avatar-recorder='' touch-to-click-converter='' raycaster='far: 100; objects: .clickable;' cursor='rayOrigin: mouse' camera-position='' inspector="xxx")
+        
+            if vrimage_id != null
+                a-sky#image-360(radius='50', src='image/' + vrimage_id)
+            else
+                //a-sky#image-360(radius='10', src='#default')
+                a-sky(color="#ECECEC" material="" geometry="" scale="" position="" rotation="" visible="")
+            
+            //loc 필요 없음
+            if arrowList.left.name
+                a-link.clickable(title=arrowList.left.name href='scene/'+ arrowList.left.name loc='left' 
+                position='' + arrowList.left.x + ' '+ arrowList.left.y + ' '+ arrowList.left.z rotation='' + arrowList.left.yaw + ' ' + arrowList.left.pitch + ' ' + arrowList.left.roll)
+
+            if arrowList.up.name
+                a-link.clickable(title=arrowList.up.name href='scene/'+ arrowList.up.name loc='up' 
+                position='' + arrowList.up.x + ' '+ arrowList.up.y + ' '+ arrowList.up.z rotation='' + arrowList.up.yaw + ' ' + arrowList.up.pitch + ' ' + arrowList.up.roll)
+
+            if arrowList.right.name
+                a-link.clickable(title=arrowList.right.name href='scene/'+ arrowList.right.name loc='right' 
+                position='' + arrowList.right.x + ' '+ arrowList.right.y + ' '+ arrowList.right.z rotation='' + arrowList.right.yaw + ' ' + arrowList.right.pitch + ' ' + arrowList.right.roll)
+
+            if arrowList.down.name
+                a-link.clickable(title=arrowList.down.name href='scene/'+ arrowList.down.name loc='down' 
+                position='' + arrowList.down.x + ' '+ arrowList.down.y + ' '+ arrowList.down.z rotation='' + arrowList.down.yaw + ' ' + arrowList.down.pitch + ' ' + arrowList.down.roll)
+
+            a-box.clickable(contents-save='scene_id:' + vid height=0.5 width=0.5 position="0 -2 -2" color='red')
+            a-entity#leftHand(link-controls='hand: left')
+            a-entity#rightHand(link-controls='hand: right')
+
+            <!-- assets -->
+            a-assets    
+                a-mixin(id='box' geometry='primitive: box; width: 0.5; height: 0.5; depth: 0.5' 
+                hoverable='' grabbable='' stretchable='' draggable='' droppable='' shadow='' 
+                event-set__hoveron='_event: hover-start; material.opacity: 0.7; transparent: true' 
+                event-set__hoveroff='_event: hover-end; material.opacity: 1; transparent: false' 
+                event-set__dragon='_event: dragover-start; material.wireframe: true' 
+                event-set__dragoff='_event: dragover-end; material.wireframe: false')
+                a-mixin(id='sphere' geometry='primitive: sphere; width: 0.5; height: 0.5; depth: 0.5' 
+                hoverable='' grabbable='' stretchable='' draggable='' droppable='' shadow='' 
+                event-set__hoveron='_event: hover-start; material.opacity: 0.7; transparent: true' 
+                event-set__hoveroff='_event: hover-end; material.opacity: 1; transparent: false' 
+                event-set__dragon='_event: dragover-start; material.wireframe: true' 
+                event-set__dragoff='_event: dragover-end; material.wireframe: false')
+                a-mixin(id='cylinder' geometry='primitive: cylinder; width: 0.5; height: 0.5; depth: 0.5' 
+                hoverable='' grabbable='' stretchable='' draggable='' droppable='' shadow='' 
+                event-set__hoveron='_event: hover-start; material.opacity: 0.7; transparent: true' 
+                event-set__hoveroff='_event: hover-end; material.opacity: 1; transparent: false' 
+                event-set__dragon='_event: dragover-start; material.wireframe: true' 
+                event-set__dragoff='_event: dragover-end; material.wireframe: false')
+
+                //a-asset-item(id='bird' src="https://cdn.aframe.io/test-models/models/glTF-2.0/virtualcity/VC.gltf")
+                //a-asset-item(id='engine' src='/public/assets/VC.gltf')
+
+            <!-- 3d Object -->
+            a-entity(id='objects')
+                //a-box(id="box1" 
+                    class=' clicable box' 
+                    edit-lookControl='' 
+                    position='0 1 -1.25' 
+                    material='color: red' 
+                    drag-rotate-component='')
+                a-entity(id="box2" 
+                        geometry='primitive: box' 
+                        class='clickable' position='1 2 2' scale='1 2 2' 
+                        material='color: orange' 
+                        drag-scale-component='')
+                //a-entity(id='yes', position='-2 2 2' material='color: purple' geometry='primitive: box')
+                //a-entity(gltf-model='#bird')
+                //a-entity(gltf-model='#engine' position='0.5 0.5 0.5')
+                //a-image(id="image" src="image.jpg")
+
+            <!-- 움직이게 하기 -->
+            a-entity(
+                wasd-controls='' position='0 1 1' capture-mouse='' 
+                raycaster='objects: .box' 
+                cursor='rayOrigin:mouse' 
+                static-body='shape: sphere; sphereRadius: 0.001' 
+                super-hands='colliderEvent: raycaster-intersection; colliderEventProperty: els; colliderEndEvent:raycaster-intersection-cleared; colliderEndEventProperty: clearedEls;')
+            a-entity(
+                wasd-controls='' position='0 1 1' capture-mouse='' 
+                raycaster='objects: .sphere' cursor='rayOrigin:mouse' 
+                static-body='shape: sphere; sphereRadius: 0.001' 
+                super-hands='colliderEvent: raycaster-intersection; colliderEventProperty: els; colliderEndEvent:raycaster-intersection-cleared; colliderEndEventProperty: clearedEls;')
+            a-entity(
+                wasd-controls='' position='0 1 1' capture-mouse='' 
+                raycaster='objects: .cylinder' 
+                cursor='rayOrigin:mouse' 
+                static-body='shape: sphere; sphereRadius: 0.001' 
+                super-hands='colliderEvent: raycaster-intersection; colliderEventProperty: els; colliderEndEvent:raycaster-intersection-cleared; colliderEndEventProperty: clearedEls;')
+
+            <!-- camera-->
+            a-camera(id='camera' look-controls="enabled:true" wasd-controls="acceleration: 20" enabled='false')
+                <!-- marker -->
+                a-entity(id="marker" position="0 0 -5" rotation="" scale="" visible="")
+
+                <!-- Custom Inspector toggle button -->
+                //- a-gui-button(
+                    id='inspectorBtn' title='inspectorBtn'  position="1 -0.75 -1" scale='0.15 0.15 0.15' 
+                    class='clickable' width='1.5' height='0.7' base-depth='0.05' depth='0.1' 
+                    gap='0.05' radius='0' value='editor' font-size='0.3' margin='0 0 0.05 0' 
+                    font-color='#F2BB16', active-color='#5687A6', hover-color='#2a5b7a' 
+                    border-color='#F2BB16' focus-color='#ff0000' background-color='#011C40' role='button' 
+                    gui-interactable="clickAction: toggleCustomInspector;")
+
+                <!--3D Object Control Button-->
+                a-gui-flex-container(id='objContainer' flex-direction="row" justify-content="center" align-items="normal" visible="false" component-padding="0.1" opacity="0" width="2.5" height="0.75" position="0 -0.75 -1" scale='0.15 0.15 0.15' rotation="0 0 0")
+                    a-gui-button(id='translate' class='clickable' width='1.5', height='0.7', base-depth='0.05', depth='0.1', gap='0.05', radius='0', value='translate', font-size='0.3', margin='0 0 0.05 0', font-color='#F2BB16', active-color='#5687A6', hover-color='#2a5b7a', border-color='#F2BB16', focus-color='#ff0000',background-color='#011C40', role='button', object-control='', gui-interactable="clickAction: selectTranslate;", toggle='true')
+
+                    a-gui-button(id='scale' title='scale' class='clickable' width='1.5', height='0.7', base-depth='0.05', depth='0.1', gap='0.05', radius='0', value='scale', font-size='0.3', margin='0 0 0.05 0', font-color='#F2BB16', active-color='#5687A6', hover-color='#2a5b7a', border-color='#F2BB16', focus-color='#ff0000', background-color='#011C40', role='button', object-control='', gui-interactable="clickAction: selectScale;", toggle='true')
+
+                    a-gui-button(id='rotate' title='rotate' class='clickable' width='1.5', height='0.7', base-depth='0.05', depth='0.1', gap='0.05', radius='0', value='rotate', font-size='0.3', margin='0 0 0.05 0', font-color='#F2BB16', active-color='#5687A6', hover-color='#2a5b7a', border-color='#F2BB16', focus-color='#ff0000',background-color='#011C40', role='button', object-control='', gui-interactable="clickAction: selectRotate;", toggle='true')
+
+                <!-- 3D Object Insert Button-->
+                a-entity(id="dropdownContainer" position="0.0 0.7 -1" scale='0.15 0.15 0.15')
+                    a-gui-flex-container(flex-direction="row" justify-content="flexStart" align-items="normal" component-padding="0.1" opacity="0" width="2.5" height="0.75" position="0 0.375 0" rotation="0 0 0")
+                        a-gui-button.clickable(
+                            id="mydropdown" width="2.5" height="0.75" onclick="openDropdown" value="OBJECT" font-family="" font-size="0.25" visible="true" 
+                            animation__rotateIn="property: rotation; to: 180 0 0; dur: 1000; startEvents:opendropdown" animation__visibleIn="property: visible; to: false; delay: 500; startEvents:opendropdown" animation__rotateOut="property: rotation; to: 0 0 0; dur: 1000; startEvents:closedropdown" animation__visibleOut="property: visible; to: true; delay: 500; startEvents:closedropdown")
+                    a-gui-flex-container(
+                        id="myoptions" flex-direction="column" justify-content="flexStart" align-items="normal" component-padding="0.1" opacity="0" width="2.5" height="0.75" position="0 0 0" rotation="0 0 0" scale="1 0.001 0.001" visible="false" animation__positionIn="property: position; to: 0 0.375 0.15; dur: 1000; startEvents:opendropdown" animation__scaleIn="property: scale; to: 1 1 1; dur: 1000; startEvents:opendropdown" animation__visibleIn="property: visible; to: true; dur: 100; startEvents:opendropdown" animation__positionOut="property: position; to: 0 0 -0.15 dur: 1000; startEvents:closedropdown" animation__scaleOut="property: scale; to: 1 0.001 0.001; dur: 1000; startEvents:closedropdown" animation__visibleOut="property: visible; to: false; dur: 100; delay: 500; startEvents:closedropdown")
+                        a-gui-button.clickable(id="box" width="2.5" height="0.75" pressed-gui-button="" font-size="0.3" value="BOX")
+                        a-gui-button.clickable(id="sphere" width="2.5" height="0.75" pressed-gui-button="" font-size="0.3" value="SPHERE")
+                        a-gui-button.clickable(id="cylinder" width="2.5" height="0.75" pressed-gui-button="" font-size="0.3" value="CYLINDER")
+                        a-gui-button.clickable(height="0.5" onclick="closeDropdown" value="x")

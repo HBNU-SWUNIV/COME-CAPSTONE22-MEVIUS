@@ -1,0 +1,21 @@
+extends _bootstrap
+append styles
+    // Custom styles for this template
+    link(href='/css/navbar-static-top.css', rel='stylesheet')
+
+block body
+    // Static navbar
+    +navbar-static("VR-CMS","navbar")
+        +nav_item("/","active") Home
+        +nav_item_dropdown("#")(label="Dropdown")
+            +nav_item("/admin/regions") Admin
+
+    .container
+        //Iteration for listing village item
+        for item in regionList
+            .jumbotron
+                // Region name
+                h3= item.name
+                p= item.location
+                a.btn.btn-lg.btn-primary(href='/region/' + item._id, role='button') Detail »
+                

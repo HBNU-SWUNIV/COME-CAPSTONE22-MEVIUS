@@ -1,0 +1,50 @@
+extends _bootstrap
+append styles
+    // Custom styles for this template
+    link(href='/css/navbar-static-top.css', rel='stylesheet')
+
+block body
+    // Static navbar
+    +navbar-static("VR-CMS","navbar")
+        +nav_item("/","active") Home
+        +nav_item_dropdown("#")(label="Dropdown")
+            +nav_item("/admin/regions") Admin
+    .container
+        form(action = "/admin/regions/update_vr", method = "POST")
+            .form-groupvid
+                label(for='vid') Region ID
+                input#vid.form-control(type='text', placeholder='Region ID', value=vrItem.region_id, name='vrid', readonly='')
+            P
+            label(for='scene') Scene ID: 
+            input#scene.form-control(type='text', placeholder='Scene ID', value=vrItem._id, name='SceneID', readonly='')
+            P
+            label(for='scene') Scene Name: 
+            input#scene.form-control(type='text', placeholder='Scene Name', value=vrItem.scene_name, name='SceneName', readonly='')
+            p
+            label(for='file') Previous Image File: 
+            |
+            img#file.image(src='/vr/image/'+ vrItem.image_file, style='width:100px; height:100px;')
+            p
+            label(for='left') Left Position
+            | 
+            img#left.image(src='/images/left.png', style='width:25px; height:25px;')
+            input#left.form-control(type='text', placeholder='Enter Scene Name to connect', value=vrItem.left_name, name='leftPos')
+            p
+            label(for='up') Up Position
+            | 
+            img#up.image(src='/images/up.png', style='width:25px; height:25px;')
+            input#up.form-control(type='text', placeholder='Enter Scene Name to connect', value=vrItem.up_name, name='upPos')
+            P
+            label(for='right') Right Position
+            | 
+            img#up.image(src='/images/right.png', style='width:25px; height:25px;')
+            input#up.form-control(type='text', placeholder='Enter Scene Name to connect', value=vrItem.right_name, name='rightPos')
+            P
+            label(for='down') Down Position
+            | 
+            img#up.image(src='/images/down.png', style='width:25px; height:25px;')
+            input#up.form-control(type='text', placeholder='Enter Scene Name to connect', value=vrItem.down_name, name='downPos')
+            P
+            +submit("Update")
+
+    

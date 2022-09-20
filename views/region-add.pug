@@ -1,0 +1,15 @@
+extends _bootstrap
+append styles
+    // Custom styles for this template
+    link(href='/css/navbar-static-top.css', rel='stylesheet')
+block body
+    // Static navbar
+    +navbar-static("VR-CMS","navbar")
+        +nav_item("/","active") Home
+        +nav_item_dropdown("#")(label="Dropdown")
+            +nav_item("/admin/regions") Admin
+    .container
+        form(action = "/admin/regions/new", method = "POST")
+            +input("text","regionName","Region name here", "region name","regionName")
+            +input("text","regionLocation", "Location of the region","region location","regionLocation")
+            +submit("Add")

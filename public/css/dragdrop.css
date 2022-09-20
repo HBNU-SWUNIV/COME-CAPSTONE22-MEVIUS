@@ -1,0 +1,30 @@
+.example-parent {
+  border: 2px solid #DFA612;
+  color: black;
+  display: flex;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+.draggable{
+  border: 2px solid #DFA612;
+}
+
+.example-origin {
+  flex-basis: 100%;
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.item-lists{
+  border: 2px solid #DFA612;
+  display: flex; /* or inline-flex */
+  width: 240px;
+  justify-content: center;
+  
+}
+
+.dropzone {
+  background-color: #6DB65B;
+  flex-basis: 100%
+  padding: 10px;
+}
