@@ -29,8 +29,12 @@ AFRAME.registerComponent('pressed-gui-button', {
             //newEl.addEventListener('click', handleClickEvent);
 
             var position = markerEl.object3D.getWorldPosition();
-            //position.y = 0.5;
+
+            //position.y = 0.5;;
             newEl.setAttribute('position', position);
+
+            var sceneEl = AFRAME.INSPECTOR.sceneEl;
+            console.log(sceneEl.camera.rotation);
         });
     }
 });

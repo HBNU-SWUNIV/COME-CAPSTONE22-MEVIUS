@@ -35821,13 +35821,12 @@
 
           objectEl.appendChild(newEl);
 
-          //newEl.classList.add('clickable');
-          //newEl.addEventListener('click', handleClickEvent);
-          var sceneEl = AFRAME.INSPECTOR.sceneEl;
-          console.log(sceneEl.camera.point);
-          console.log(AFRAME.scenes[0].camera);
-          var position = sceneEl.camera.getWorldPosition();
-          newEl.setAttribute('position', { x: position.x, y: position.y, z: position.z });
+          var dist = 5;
+          var cwd = new THREE.Vector3();
+          sceneEl.camera.getWorldDirection(cwd);
+          cwd.multiplyScalar(dist);
+          cwd.add(sceneEl.camera.position);
+          newEl.setAttribute('position', { x: cwd.x, y: cwd.y, z: cwd.z });
         };
 
         this.state = {
