@@ -30240,7 +30240,7 @@
           // _this5.setAttribute('material', 'color', 'green');
 
           // scene_id 가져오기
-          var content_save = entity.querySelector('a-gui-button');
+          var content_save = entity.querySelector('#saveButton');
           var scene_id = content_save.getAttribute('contents-save')['scene_id'];
 
           var url = 'scene_update/' + scene_id;
@@ -30286,7 +30286,7 @@
           Toast.fire({
             icon: 'success',
             iconColor: '#a5dc86',
-            title: '저장되었습니다'
+            title: 'Saved successfully'
           });
         }
         // --
@@ -30417,17 +30417,17 @@
       render() {
         // 추가한 부분 -------------------------
         // Edit mode일 때 GUI 숨기기
-        var gui = document.querySelectorAll('.gui');
+        // var gui = document.querySelectorAll('.gui');
 
-        for (var gui_item of gui) {
-          if (this.state.inspectorEnabled == true) {
-            gui_item.setAttribute('visible', 'false');
-          }
-          else {
-            gui_item.setAttribute('visible', 'true');
-          }
-        }
-        // ------------------------------------
+        // for (var gui_item of gui) {
+        //   if (this.state.inspectorEnabled == true) {
+        //     gui_item.setAttribute('visible', 'false');
+        //   }
+        //   else {
+        //     gui_item.setAttribute('visible', 'true');
+        //   }
+        // }
+        // // ------------------------------------
 
         var scene = this.state.sceneEl;
         var toggleButtonText = this.state.inspectorEnabled ? 'Scene mode' : 'Edit mode';
@@ -35799,10 +35799,116 @@
           });
         };
 
+        this.importLinkObject = function (e) {
+          var link_object = document.getElementById('linkButton');
+          var sceneName = link_object.getAttribute('object-link')['sceneName'];
+          var sceneId = link_object.getAttribute('object-link')['sceneId'];
+
+          console.log(sceneName);
+          console.log(sceneId);
+
+          var HREF = 'http://localhost:3000/vr/';
+
+          var nameList = sceneName.split(',');
+          var idList = sceneId.split(',');
+
+          console.log(nameList);
+          console.log(idList);
+
+          var objectEl = document.querySelector('#objects');
+          var sceneEl = document.querySelector('#scene');
+          var sceneHref = '';
+
+          (async () => {
+
+            const { value: text } = await Swal.fire({
+              title: 'Please enter a Link name',
+              input: 'text',
+              inputLabel: 'Please write it in English',
+              width: 600,
+              inputPlaceholder: 'Enter Link name',
+              showCancelButton: true
+            })
+
+            if (text) {
+              //list
+              const { value: scene } = await Swal.fire({
+                title: 'Select Scene',
+                input: 'select',
+                inputOptions: {
+                  'Scene List': nameList
+                },
+                inputPlaceholder: 'Select Scene',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                  return new Promise((resolve) => {
+                    if (value) {
+                      sceneHref = HREF + idList[value];
+                      resolve();
+                    } else {
+                      resolve('There are no scenes selected.');
+                    }
+                  })
+                }
+              })
+
+              if (scene) {
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'center',
+                  showConfirmButton: false,
+                  timer: 1000
+                })
+
+                Toast.fire({
+                  icon: 'success',
+                  iconColor: '#7066e0',
+                  title: 'Created successfully'
+                })
+
+                var linkEl = document.createElement('a-entity');
+                linkEl.setAttribute('text', {
+                  value: `${text}\n\n\n`,
+                  width: 7,
+                  align: 'center',
+                  anchor: 'align',
+                  baseline: 'bottom'
+                });
+
+                linkEl.setAttribute('geometry', { primitive: 'box' });
+                linkEl.setAttribute('class', 'clickable');
+                linkEl.setAttribute('material', { color: 'purple' });
+                linkEl.setAttribute('link', 'href', sceneHref);
+
+                // var position = markerEl.object3D.getWorldPosition();
+                // linkEl.setAttribute('position', position);
+                objectEl.appendChild(linkEl);
+
+                var dist = 5;
+                var cwd = new THREE.Vector3();
+                sceneEl.camera.getWorldDirection(cwd);
+                cwd.multiplyScalar(dist);
+                cwd.add(sceneEl.camera.position);
+                linkEl.setAttribute('position', { x: cwd.x, y: cwd.y, z: cwd.z });
+              }
+            } else if (text === '') {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'center',
+                showConfirmButton: false,
+                timer: 1000
+              })
+
+              Toast.fire({
+                icon: 'warning',
+                title: 'Enter Link name'
+              })
+            }
+          })()
+        };
 
         this.importBasicObject = function (e) {
           var objectEl = document.querySelector('#objects');
-          var markerEl = document.querySelector('#marker');
           var sceneEl = document.querySelector('#scene');
 
           var COLORS = [
@@ -35813,9 +35919,10 @@
             'peachpuff',
             '#2EAFAC',
             '#BAE'];
+
           var newEl = document.createElement('a-entity');
           newEl.setAttribute('id', 'boxtest');
-          newEl.setAttribute('geometry', { primitive: 'box' });
+          newEl.setAttribute('geometry', { primitive: e.target.id });
           newEl.setAttribute('material', 'color', COLORS[Math.floor(Math.random() * COLORS.length)]); //random color
           newEl.setAttribute('loc', 'box', new Date().getTime() / 100);
 
@@ -35898,30 +36005,102 @@
               },
               'BOX'
             ),
-            // _react2.default.createElement(
-            //   'div',
-            //   { className: 'search' },
-            //   _react2.default.createElement('input', {
-            //     id: 'filter',
-            //     placeholder: 'Search...',
-            //     onChange: this.onChangeFilter,
-            //     onKeyUp: this.onFilterKeyUp,
-            //     value: this.state.filter
-            //   }),
-            //   clearFilter,
-            //   !this.state.filter && _react2.default.createElement('span', { className: 'fa fa-search' })
-            // )
+
+            _react2.default.createElement(
+              'button',
+              {
+                id: 'sphere',
+                className: 'clickable',
+                onClick: this.importBasicObject
+              },
+              'SPHERE'
+            ),
+            _react2.default.createElement(
+              'button',
+              {
+                id: 'cylinder',
+                className: 'clickable',
+                onClick: this.importBasicObject
+              },
+              'CYLINDER'
+            ),
+            _react2.default.createElement(
+              'button',
+              {
+                id: 'cone',
+                className: 'clickable',
+                onClick: this.importBasicObject
+              },
+              'CONE'
+            ),
+            _react2.default.createElement(
+              'button',
+              {
+                id: 'circle',
+                className: 'clickable',
+                onClick: this.importBasicObject
+              },
+              'CIRCLE'
+            ),
+            _react2.default.createElement(
+              'button',
+              {
+                id: 'plane',
+                className: 'clickable',
+                onClick: this.importBasicObject
+              },
+              'PLANE'
+            ),
+            _react2.default.createElement(
+              'button',
+              {
+                id: 'triangle',
+                className: 'clickable',
+                onClick: this.importBasicObject
+              },
+              'TRIANGLE'
+            ), _react2.default.createElement(
+              'button',
+              {
+                id: 'ring',
+                className: 'clickable',
+                onClick: this.importBasicObject
+              },
+              'RING'
+            ),
+            _react2.default.createElement(
+              'button',
+              {
+                id: 'link',
+                className: 'clickable',
+                onClick: this.importLinkObject
+              },
+              'LINK'
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'search' },
+              _react2.default.createElement('input', {
+                id: 'filter',
+                placeholder: 'Search...',
+                onChange: this.onChangeFilter,
+                onKeyUp: this.onFilterKeyUp,
+                value: this.state.filter
+              }),
+              clearFilter,
+              !this.state.filter && _react2.default.createElement('span', { className: 'fa fa-search' })
+            )
           ),
-          // _react2.default.createElement(
-          //   'div',
-          //   {
-          //     className: 'outliner',
-          //     tabIndex: '0',
-          //     onKeyDown: this.onKeyDown,
-          //     onKeyUp: this.onKeyUp
-          //   },
-          //   this.renderEntities()
-          // )
+          _react2.default.createElement(
+            'div',
+            {
+              className: 'outliner',
+              tabIndex: '0',
+              onKeyDown: this.onKeyDown,
+              onKeyUp: this.onKeyUp
+            },
+            this.renderEntities()
+          )
         );
       }
     }
