@@ -26,7 +26,7 @@
 
 - ### System Requirements
 	- 웹 기반 메타버스 환경 → 
-	- 웹 페이지 →  [Open Source](https://github.com/20191792/VR-CMS.git) 코드 수정 및 활용
+	- 웹 페이지 →  [Open Source](https://github.com/cbchoi/VR-CMS.git) 코드 수정 및 활용
 	- 3D Object 편집기 → [Open Source](https://github.com/aframevr/aframe-inspector.git) 코드 수정 및 활용
 
 
