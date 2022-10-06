@@ -36534,7 +36534,7 @@
     var _react = __webpack_require__(1);
     var _react2 = _interopRequireDefault(_react);
 
-    var TransformButtons = [{ value: 'translate', icon: 'fa-arrows-alt' }, { value: 'rotate', icon: 'fa-repeat' }, { value: 'scale', icon: 'fa-expand' }, { value: 'color', icon: 'fa-paint-brush' }];
+    var TransformButtons = [{ value: 'translate', icon: 'fa-arrows-alt' }, { value: 'rotate', icon: 'fa-repeat' }, { value: 'scale', icon: 'fa-expand' }, { value: 'color', icon: 'fa-paint-brush' }, { value: 'delete', icon: 'fa-trash' }];
 
     class TransformToolbar extends React.Component {
       constructor(props) {
