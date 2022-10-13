@@ -5,7 +5,7 @@ var Connections = require('../models/connectModel')
 var mongoose = require('mongoose');
 
 var Region = require('../models/regionModel');
-var VRModel = require('../models/vrModel')
+var VRModel = require('../models/vrModel');
 
 /* GET home page. */
 //router.get('/', function(req, res, next) {
@@ -37,6 +37,7 @@ router.get('/:vid', function (req, res) {
 
     var linkList;
     var entityList;
+    var linkObjList;
     var sceneName;
     var sceneId;
     var regionId;
@@ -63,6 +64,7 @@ router.get('/:vid', function (req, res) {
 
     // boxtest는 entityList로 가져옴
     entityList = vritem.boxtest;
+    linkObjList = vritem.linkobject;
 
     // console.log('===================================');
     // console.log(`${vritem.region_id} ///// ${vritem.scene_name}`);
@@ -88,7 +90,7 @@ router.get('/:vid', function (req, res) {
       console.log(sceneName);
       console.log(sceneId);
 
-      return res.render("vr_item", { vid: req.params.vid, vrimage_id: vritem.image_file, arrowList: linkList, objectList: entityList, sceneName: sceneName, sceneId: sceneId });
+      return res.render("vr_item", { vid: req.params.vid, vrimage_id: vritem.image_file, arrowList: linkList, objectList: entityList, sceneName: sceneName, sceneId: sceneId, linkObjList: linkObjList });
     });
 
     // linkList, objectList render하기
@@ -193,6 +195,42 @@ router.put("/scene_update/:id", (req, res) => {
         });
       }
       console.log('boxtest finish save');
+    }
+
+    if ("linkobject" in req.body) {
+      // boxtest에 이미 저장된 요소들 undefined가 될 때까지 비우기
+      while (item.linkobject.shift() !== undefined)
+
+        console.log('linkObj try save');
+      // console.log('length' + String(req.body.boxtest.length));
+
+      // boxtest value에 entity 하나씩 push하기
+      for (let i = 0; i < (req.body.linkobject.length); i++) {
+        item.linkobject.push({
+          x: req.body.linkobject[i][0]['x'],        // position
+          y: req.body.linkobject[i][0]['y'],
+          z: req.body.linkobject[i][0]['z'],
+          yaw: req.body.linkobject[i][1]['x'],      // rotation
+          pitch: req.body.linkobject[i][1]['y'],
+          roll: req.body.linkobject[i][1]['z'],
+          xscale: req.body.linkobject[i][2]['x'],   //scale
+          yscale: req.body.linkobject[i][2]['y'],
+          zscale: req.body.linkobject[i][2]['z'],
+          id: req.body.linkobject[i][3],            // id
+          loc: req.body.linkobject[i][4],           // loc
+          geometry: req.body.linkobject[i][5],      // primitive
+          color: req.body.linkobject[i][6]['color'],            // material - color
+          opacity: req.body.linkobject[i][6]['opacity'],        // material - opacity
+          class: req.body.linkobject[i][7],                     // class - clickable
+          herf: req.body.linkobject[i][8],                      // link - href
+          name: req.body.linkobject[i][9]['value'],             // link name
+          nwidth: req.body.linkobject[i][9]['width'],           // link width
+          nalign: req.body.linkobject[i][9]['align'],           // link align
+          nanchor: req.body.linkobject[i][9]['anchor'],         // link anchor
+          nbaseline: req.body.linkobject[i][9]['baseline']      // link baseline
+        });
+      }
+      console.log('linkObj finish save');
     }
 
     // ############### Save single-object ###############

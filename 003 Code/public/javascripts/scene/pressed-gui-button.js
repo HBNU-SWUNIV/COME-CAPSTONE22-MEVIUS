@@ -127,7 +127,7 @@ AFRAME.registerComponent('object-link', {
 
                         var linkEl = document.createElement('a-entity');
                         linkEl.setAttribute('text', {
-                            value: `${text}\n\n\n`,
+                            value: `${text}`,
                             width: 7,
                             align: 'center',
                             anchor: 'align',

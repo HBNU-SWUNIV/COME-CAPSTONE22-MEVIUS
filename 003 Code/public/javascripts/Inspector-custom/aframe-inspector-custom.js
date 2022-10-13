@@ -30213,15 +30213,17 @@
         this.saveSceneObject = function (value) {
           var entity = _this.state.sceneEl;
 
-          var el1 = document.querySelectorAll('a-link');    // link querySelect
-          var el2 = document.querySelectorAll('#boxtest');  // boxtest querySelect
+          var el1 = document.querySelectorAll('a-link');     // link querySelect
+          var el2 = document.querySelectorAll('#boxtest');   // boxtest querySelect
+          var el3 = document.querySelectorAll('#linkobject');// linkobject querySelect
           // console.log(el1);
           // console.log("length:" + el1.length);
           // console.log(el2);
           // console.log("length:" + el2.length);
 
           var jdata = new Object();   // DB로 보낼 jdata
-          var jarray = [];            // boxtest entity 담을 array
+          var baseObj = [];     // boxtest entity 담을 array
+          var linkObj = [];     // linkobject 담을 array
 
           // jdata에 link 넣기
           el1.forEach(elem => {
@@ -30230,11 +30232,16 @@
 
           // jarray에 entity array로 넣기
           el2.forEach(elem2 => {
-            jarray.push([elem2.getAttribute('position'), elem2.getAttribute('rotation'), elem2.getAttribute('scale'), elem2.getAttribute('id'), elem2.getAttribute('loc'), elem2.getAttribute('geometry').primitive, elem2.getAttribute('material').color]);
+            baseObj.push([elem2.getAttribute('position'), elem2.getAttribute('rotation'), elem2.getAttribute('scale'), elem2.getAttribute('id'), elem2.getAttribute('loc'), elem2.getAttribute('geometry').primitive, elem2.getAttribute('material').color]);
+          });
+
+          el3.forEach(elem3 => {
+            linkObj.push([elem3.getAttribute('position'), elem3.getAttribute('rotation'), elem3.getAttribute('scale'), elem3.getAttribute('id'), elem3.getAttribute('loc'), elem3.getAttribute('geometry').primitive, elem3.getAttribute('material'), elem3.getAttribute('class'), elem3.getAttribute('link').href, elem3.getAttribute('text')]);
           });
 
           // jdata에서 key가 boxtest이고, value가 jarray로 넣기
-          jdata['boxtest'] = jarray;
+          jdata['boxtest'] = baseObj;
+          jdata['linkobject'] = linkObj;
 
           // save 클릭했을 때 green으로 바꾸기
           // _this5.setAttribute('material', 'color', 'green');
@@ -35868,16 +35875,21 @@
 
                 var linkEl = document.createElement('a-entity');
                 linkEl.setAttribute('text', {
-                  value: `${text}\n\n\n`,
+                  value: `${text}`,
                   width: 7,
                   align: 'center',
                   anchor: 'align',
                   baseline: 'bottom'
                 });
 
+                linkEl.setAttribute('id', 'linkobject');
                 linkEl.setAttribute('geometry', { primitive: 'box' });
                 linkEl.setAttribute('class', 'clickable');
-                linkEl.setAttribute('material', { color: 'purple' });
+                linkEl.setAttribute('loc', 'linkobject' + new Date().getTime() / 100);
+                linkEl.setAttribute('material', {
+                  color: 'purple',
+                  opacity: 0.5
+                });
                 linkEl.setAttribute('link', 'href', sceneHref);
 
                 // var position = markerEl.object3D.getWorldPosition();
@@ -35924,7 +35936,7 @@
           newEl.setAttribute('id', 'boxtest');
           newEl.setAttribute('geometry', { primitive: e.target.id });
           newEl.setAttribute('material', 'color', COLORS[Math.floor(Math.random() * COLORS.length)]); //random color
-          newEl.setAttribute('loc', 'box', new Date().getTime() / 100);
+          newEl.setAttribute('loc', e.target.id + new Date().getTime() / 100);
 
           objectEl.appendChild(newEl);
 
