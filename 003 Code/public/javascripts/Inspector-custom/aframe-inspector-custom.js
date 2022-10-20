@@ -30232,7 +30232,7 @@
 
           // jarray에 entity array로 넣기
           el2.forEach(elem2 => {
-            baseObj.push([elem2.getAttribute('position'), elem2.getAttribute('rotation'), elem2.getAttribute('scale'), elem2.getAttribute('id'), elem2.getAttribute('loc'), elem2.getAttribute('geometry').primitive, elem2.getAttribute('material').color]);
+            baseObj.push([elem2.getAttribute('position'), elem2.getAttribute('rotation'), elem2.getAttribute('scale'), elem2.getAttribute('id'), elem2.getAttribute('loc'), elem2.getAttribute('geometry').primitive, elem2.getAttribute('material')]);
           });
 
           el3.forEach(elem3 => {
@@ -35806,7 +35806,7 @@
           });
         };
 
-        this.importLinkObject = function (e) {
+        this.insertLinkObject = function (e) {
           var link_object = document.getElementById('linkButton');
           var sceneName = link_object.getAttribute('object-link')['sceneName'];
           var sceneId = link_object.getAttribute('object-link')['sceneId'];
@@ -35919,7 +35919,37 @@
           })()
         };
 
-        this.importBasicObject = function (e) {
+        this.removeObject = function (e) {
+          // console.log(_this.props.selectedEntity);
+          var entity = _this.props.selectedEntity;
+          //console.log(loc);
+          if (entity) {
+            var loc = entity.getAttribute('loc');
+            Swal.fire({
+              title: 'Do you really want to remove entity `' + (loc) + '`?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                Swal.fire(
+                  'Deleted!',
+                  '`' + (loc) + '` has been deleted.',
+                  'success'
+                )
+                AFRAME.INSPECTOR.removeObject(entity.object3D);
+                entity.parentNode.removeChild(entity);
+              }
+            })
+          } else {
+            console.log('No objects are selected.');
+          }
+        };
+
+        this.insertBasicObject = function (e) {
           var objectEl = document.querySelector('#objects');
           var sceneEl = document.querySelector('#scene');
 
@@ -35935,7 +35965,10 @@
           var newEl = document.createElement('a-entity');
           newEl.setAttribute('id', 'boxtest');
           newEl.setAttribute('geometry', { primitive: e.target.id });
-          newEl.setAttribute('material', 'color', COLORS[Math.floor(Math.random() * COLORS.length)]); //random color
+          newEl.setAttribute('material', {
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            opacity: 1
+          }); //random color
           newEl.setAttribute('loc', e.target.id + new Date().getTime() / 100);
 
           objectEl.appendChild(newEl);
@@ -36013,7 +36046,7 @@
               {
                 id: 'box',
                 className: 'clickable',
-                onClick: this.importBasicObject
+                onClick: this.insertBasicObject
               },
               'BOX'
             ),
@@ -36023,7 +36056,7 @@
               {
                 id: 'sphere',
                 className: 'clickable',
-                onClick: this.importBasicObject
+                onClick: this.insertBasicObject
               },
               'SPHERE'
             ),
@@ -36032,7 +36065,7 @@
               {
                 id: 'cylinder',
                 className: 'clickable',
-                onClick: this.importBasicObject
+                onClick: this.insertBasicObject
               },
               'CYLINDER'
             ),
@@ -36041,7 +36074,7 @@
               {
                 id: 'cone',
                 className: 'clickable',
-                onClick: this.importBasicObject
+                onClick: this.insertBasicObject
               },
               'CONE'
             ),
@@ -36050,7 +36083,7 @@
               {
                 id: 'circle',
                 className: 'clickable',
-                onClick: this.importBasicObject
+                onClick: this.insertBasicObject
               },
               'CIRCLE'
             ),
@@ -36059,7 +36092,7 @@
               {
                 id: 'plane',
                 className: 'clickable',
-                onClick: this.importBasicObject
+                onClick: this.insertBasicObject
               },
               'PLANE'
             ),
@@ -36068,7 +36101,7 @@
               {
                 id: 'triangle',
                 className: 'clickable',
-                onClick: this.importBasicObject
+                onClick: this.insertBasicObject
               },
               'TRIANGLE'
             ), _react2.default.createElement(
@@ -36076,7 +36109,7 @@
               {
                 id: 'ring',
                 className: 'clickable',
-                onClick: this.importBasicObject
+                onClick: this.insertBasicObject
               },
               'RING'
             ),
@@ -36085,10 +36118,15 @@
               {
                 id: 'link',
                 className: 'clickable',
-                onClick: this.importLinkObject
+                onClick: this.insertLinkObject
               },
               'LINK'
             ),
+            _react2.default.createElement('a', {
+              title: 'Remove object',
+              className: 'button fa fa-trash-o',
+              onClick: this.removeObject
+            }),
             _react2.default.createElement(
               'div',
               { className: 'search' },
@@ -36546,17 +36584,14 @@
     var _react = __webpack_require__(1);
     var _react2 = _interopRequireDefault(_react);
 
-    var TransformButtons = [{ value: 'translate', icon: 'fa-arrows-alt' }, { value: 'rotate', icon: 'fa-repeat' }, { value: 'scale', icon: 'fa-expand' }, { value: 'color', icon: 'fa-paint-brush' }, { value: 'delete', icon: 'fa-trash' }];
+    var TransformButtons = [{ value: 'translate', icon: 'fa-arrows-alt' }, { value: 'rotate', icon: 'fa-repeat' }, { value: 'scale', icon: 'fa-expand' }];
+    //- , { value: 'color', icon: 'fa-paint-brush' }, { value: 'delete', icon: 'fa-trash' }
 
     class TransformToolbar extends React.Component {
       constructor(props) {
         var _this;
 
         _this = super(props);
-
-        this.printLog = function () {
-          console.log(_this.entity);
-        }
 
         this.changeTransformMode = function (mode) {
           _this.setState({ selectedTransform: mode });
@@ -36593,6 +36628,7 @@
           selectedTransform: 'translate',
           localSpace: false
         };
+
       }
 
       componentDidMount() {
@@ -36609,21 +36645,10 @@
       }
 
       render() {
-        var props = this.props;
-        // console.log(this.props.entity);
-        //console.log(`${this.props} + ${props.schema}`);
-
         return React.createElement(
           'div',
           { id: 'transformToolbar', className: 'toolbarButtons' },
           this.renderTransformButtons(),
-          this.printLog(),
-          //
-          //React.createElement(_ColorWidget2.default, null ),
-          //   React.createElement(_ColorWidget2.default, {
-          //     entity: this.state.entity
-          //     }),
-          //
           React.createElement(
             'span',
             { className: 'local-transform' },
@@ -36642,23 +36667,7 @@
                 title: 'Toggle between local and world space transforms'
               },
               'local'
-            ),
-            // //
-            // React.createElement('input', {
-            //     type: 'color',
-            //     className: 'color',
-            //     value: this.state.pickerValue,
-            //     title: this.state.value,
-            //     onChange: this.onChange
-            //   }),
-            //   React.createElement('input', {
-            //     type: 'text',
-            //     className: 'color_value',
-            //     value: this.state.value,
-            //     onKeyUp: this.onKeyUp,
-            //     onChange: this.onChangeText
-            //   })
-            // //
+            )
           )
         );
       }

@@ -20,7 +20,7 @@ var vrSchema = new Schema({
         x: Number, y: Number, z: Number,
         yaw: Number, pitch: Number, roll: Number,
         xscale: Number, yscale: Number, zscale: Number,
-        id: String, loc: String, geometry: String, color: String
+        id: String, loc: String, geometry: String, color: String, opacity: Number
     })],
     linkobject: [new mongoose.Schema({
         x: Number, y: Number, z: Number,

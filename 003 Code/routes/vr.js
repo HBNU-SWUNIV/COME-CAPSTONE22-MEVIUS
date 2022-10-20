@@ -191,7 +191,8 @@ router.put("/scene_update/:id", (req, res) => {
           id: req.body.boxtest[i][3], // id
           loc: req.body.boxtest[i][4],  // loc
           geometry: req.body.boxtest[i][5],  // material
-          color: req.body.boxtest[i][6] // color
+          color: req.body.boxtest[i][6]['color'], // color
+          opacity: req.body.boxtest[i][6]['opacity'] // opaticy
         });
       }
       console.log('boxtest finish save');
