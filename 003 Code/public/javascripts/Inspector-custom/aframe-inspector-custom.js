@@ -35875,7 +35875,7 @@
 
                 var linkEl = document.createElement('a-entity');
                 linkEl.setAttribute('text', {
-                  value: `${text}`,
+                  value: `${text}\\n\\n\\n`,
                   width: 7,
                   align: 'center',
                   anchor: 'align',

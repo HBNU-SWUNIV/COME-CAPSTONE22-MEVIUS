@@ -53,9 +53,7 @@ html
 
             //- <a-asset-item id="village"src="/object/scene.gltf"></a-asset-item>
             //- <a-entity gltf-model="#village"></a-entity>
-
-            // entity objects
-            //- a-entity.clickable(id='objects' position='0 0 0' scale='1 1 1' geometry='primitive: sphere' material='color: orange; opacity: 0.7' link='href: https://www.naver.com/')
+            
             a-entity(id='objects')
                 //- objectList
                 - var i = -1
@@ -80,7 +78,7 @@ html
                         material='color: '+linkObjList[j].color+'; opacity: '+linkObjList[j].opacity 
                         class=linkObjList[j].class 
                         link='href: '+linkObjList[j].herf 
-                        text='value: '+linkObjList[j].name+'\n\n\n; width: '+linkObjList[j].nwidth+'; align: '+linkObjList[j].nalign+'; anchor: '+linkObjList[j].nanchor+'; baseline: '+linkObjList[j].nbaseline
+                        text='value: '+linkObjList[j].name+'; width: '+linkObjList[j].nwidth+'; align: '+linkObjList[j].nalign+'; anchor: '+linkObjList[j].nanchor+'; baseline: '+linkObjList[j].nbaseline
                     )
 
             //left&right hand
